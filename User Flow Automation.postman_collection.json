@@ -8,37 +8,39 @@
   },
   "item": [
     {
-      "name": "Authors",
+      "name": "GetBooking",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{BaseUrl}}/api/v1/Books",
+          "raw": "{{BaseUrl}}/booking/1",
           "host": [
             "{{BaseUrl}}"
           ],
           "path": [
-            "api",
-            "v1",
-            "Books"
+            "booking",
+            "1"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "books",
+      "name": "Auth-CreateToken",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Response has 'token'property\",function(){\r",
+              "pm.test(\"Response has token\", function () {\r",
               "    var jsonData = pm.response.json();\r",
-              "    pm.expect(jsonData.token).to.have.property('token');\r",
-              "    pm.environment.set(\"token\", jsonData.token); // Store token in environment variable\r",
-              "    console.log('token value is; ',jsonData.token)\r",
-              "    console.log('token value is; ',pm.environment.get(\"token\"))\r",
+              "\r",
+              "    pm.expect(jsonData).to.have.property('token');\r",
+              "\r",
+              "    pm.environment.set(\"token\", jsonData.token);\r",
+              "\r",
+              "    console.log(\"Token from response:\", jsonData.token);\r",
+              "    console.log(\"Token saved:\", pm.environment.get(\"token\"));\r",
               "});"
             ],
             "type": "text/javascript",
@@ -78,12 +80,191 @@
       "response": []
     },
     {
-      "name": "Users",
+      "name": "GEtBookinIds",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"id\": 0,\r\n    \"userName\": \"string\",\r\n    \"password\": \"string\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseUrl}}/booking",
+          "host": [
+            "{{BaseUrl}}"
+          ],
+          "path": [
+            "booking"
+          ]
+        }
       },
       "response": []
+    },
+    {
+      "name": "CreateBooking",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "",
+            "value": "",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstname\" : \"Jim\",\r\n    \"lastname\" : \"Brown\",\r\n    \"totalprice\" : 111,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2018-01-01\",\r\n        \"checkout\" : \"2019-01-01\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseUrl}}/booking",
+          "host": [
+            "{{BaseUrl}}"
+          ],
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstname\" : \"James\",\r\n    \"lastname\" : \"Brown\",\r\n    \"totalprice\" : 111,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2018-01-01\",\r\n        \"checkout\" : \"2019-01-01\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseUrl}}/booking/1",
+          "host": [
+            "{{BaseUrl}}"
+          ],
+          "path": [
+            "booking",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PartialUpdateBooking",
+      "request": {
+        "auth": {
+          "type": "apikey"
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstname\" : \"James\",\r\n    \"lastname\" : \"Brown\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseUrl}}/booking/3",
+          "host": [
+            "{{BaseUrl}}"
+          ],
+          "path": [
+            "booking",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DeleteBooking",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{BaseUrl}}/booking/1",
+          "host": [
+            "{{BaseUrl}}"
+          ],
+          "path": [
+            "booking",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "HealthCheck",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseUrl}}/ping",
+          "host": [
+            "{{BaseUrl}}"
+          ],
+          "path": [
+            "ping"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
     }
   ]
 }
